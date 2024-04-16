@@ -1,29 +1,17 @@
 import { useState } from "react"
 import { calculateInvestmentResults, formatter } from "./util/investment"
+import UserInput from "./components/UserInput";
+import ResultTable from "./components/ResultTable";
 
 
 function App() {
+  const [userInput, setUserInput] = useState({initialInvestment : 3000,
+    annualInvestment: 1000, expectedReturn: 4, duration: 10})
 
-  const [investmentData, enterResult] = useState({initialInvestment : undefined, annualInvestment: undefined,
-    expectedReturn: undefined, duration: undefined});
-
-  const [investmentResults, setInvestmentResults] = useState()
-
-  function handleInitialInvestment(entry) {
-    enterResult(calculateInvestmentResults(prevResults => prevResults.initialInvestment = entry))
-    setInvestmentResults(calculateInvestmentResults(investmentData))
-  }
-  function handleAnnualInvestment(entry) {
-    enterResult(calculateInvestmentResults(prevResults => prevResults.annualInvestment = entry))
-    setInvestmentResults(calculateInvestmentResults(investmentData))
-  }
-  function handleExpectedReturn(entry) {
-    enterResult(calculateInvestmentResults(prevResults => prevResults.expectedReturn = entry))
-    setInvestmentResults(calculateInvestmentResults(investmentData))
-  }
-  function handleDuration(entry) {
-    enterResult(calculateInvestmentResults(prevResults => prevResults.duration = entry))
-    setInvestmentResults(calculateInvestmentResults(investmentData))
+  function handleChange(inputIdentifier, newValue) {
+    setUserInput(prevUserInput => {
+      return {...prevUserInput, [inputIdentifier]: newValue}
+    })
   }
 
   return (
@@ -32,47 +20,8 @@ function App() {
         <img src="investment-calculator-logo.png" alt="bag of money atop gold pile" />
         <h1>React Investment Calculator</h1>
       </div>
-      <div id="user-input">
-        <ul className="input-group">
-          <li>
-            <label className="label">INITIAL INVESTMENT</label>
-            <input type="number"  value={investmentData.initialInvestment} onChange={handleInitialInvestment}></input>
-          </li>
-          <li>
-          <label className="label">ANNUAL INVESTMENT</label>
-          <input type="number"  value={investmentData.annualInvestment} onChange={handleAnnualInvestment}></input>
-          </li>
-        </ul>
-        <ul className="input-group">
-          <li>
-            <label>EXPECTED RETURN</label>
-            <input type="number"  value={investmentData.expectedReturn} onChange={handleExpectedReturn}></input>
-          </li>
-          <li>
-            <label className="label">DURATION</label>
-            <input type="number"  value={investmentData.duration} onChange={handleDuration}></input>
-          </li>
-        </ul>
-      </div>
-      {investmentData && <table id="result">
-        <thead>
-          <tr>
-            <th>Year</th>
-            <th>Investment Value</th>
-            <th>Interest (Year)</th>
-            <th>Total Interest</th>
-            <th>Invested Capital</th>
-          </tr>
-        </thead>
-        <tbody> 
-          <tr>
-            <th>
-              test
-            </th>
-          </tr>
-        </tbody>
-
-      </table> }
+      <UserInput onChange={handleChange} userInput={userInput} />
+      <ResultTable userInput={userInput} />
     </>
   )
 }
