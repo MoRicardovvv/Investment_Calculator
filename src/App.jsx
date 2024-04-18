@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { calculateInvestmentResults, formatter } from "./util/investment"
 import UserInput from "./components/UserInput";
 import ResultTable from "./components/ResultTable";
 
@@ -7,6 +6,8 @@ import ResultTable from "./components/ResultTable";
 function App() {
   const [userInput, setUserInput] = useState({initialInvestment : 3000,
     annualInvestment: 1000, expectedReturn: 4, duration: 10})
+  
+  const inputIsValid = userInput.duration >= 1
 
   function handleChange(inputIdentifier, newValue) {
     setUserInput(prevUserInput => {
@@ -21,7 +22,8 @@ function App() {
         <h1>React Investment Calculator</h1>
       </div>
       <UserInput onChange={handleChange} userInput={userInput} />
-      <ResultTable userInput={userInput} />
+      {inputIsValid ? <ResultTable userInput={userInput} /> :
+        <p className="center">Investment duration not a valid amount</p>}
     </>
   )
 }
